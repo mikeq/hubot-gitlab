@@ -89,11 +89,10 @@ module.exports = (robot) ->
         else
           switch hook.object_kind
             when "issue"
-              robot.send user, "Issue #{bold(hook.object_attributes.iid)}: #{hook.object_attributes.title} (#{hook.object_attributes.state}) at #{hook.object_attributes.url}"
+              unless hook.object_attributes.action == "update"
+                robot.send user, "Issue #{bold(hook.object_attributes.iid)}: #{hook.object_attributes.title} (#{hook.object_attributes.state}) at #{hook.object_attributes.url}"
             when "merge_request"
               robot.send user, "Merge Request #{bold(hook.object_attributes.iid)}: #{hook.object_attributes.title} (#{hook.object_attributes.state}) between #{bold(hook.object_attributes.source_branch)} and #{bold(hook.object_attributes.target_branch)}"
-          if hook.object_attributes.description
-            robot.send user, ">> #{hook.object_attributes.description}"
 
   robot.router.post "/gitlab/system", (req, res) ->
     handler "system", req, res
